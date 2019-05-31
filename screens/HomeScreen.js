@@ -20,13 +20,11 @@ export default class HomeScreen extends React.Component {
 
   state = {
     jokes: [],
-    countJoke: "0",
+    countJoke: "10",
   };
 
-  count = "10";
-
   createLINK(){
-    link = apiURL + this.count + escapeChar;
+    link = apiURL + (this.state.countJoke == "" ? "0" : this.state.countJoke) + escapeChar;
     return link;
   }
 
@@ -36,7 +34,6 @@ export default class HomeScreen extends React.Component {
     const data = await response.json();
     const jokes = data.value;
     this.setState({jokes});
-    this.setState({countJoke: this.count});
   }
 
   componentDidMount(){
@@ -45,7 +42,8 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const { jokes } = this.state;
-    console.log(this.state);
+    // console.log(this.state);
+    console.log(jokes);
     return (
       <KeyboardAvoidingView
         keyboardVerticalOffset={70}
@@ -55,7 +53,7 @@ export default class HomeScreen extends React.Component {
       >
           <ScrollView style={styles.containerJoke}>
               {
-                this.count ? 
+                jokes ? 
                 jokes.map(item => (
                   <ItemJoke
                     text={item.joke}
@@ -71,7 +69,8 @@ export default class HomeScreen extends React.Component {
               style={styles.input}
               placeholder="Количество шуток"
               keyboardType="number-pad"
-              onChangeText={(countJoke) => this.count = countJoke}
+              onChangeText={(count) => this.setState({countJoke: count})}
+              value={this.state.countJoke}
             />
             <View style={styles.button}>
               <Button
